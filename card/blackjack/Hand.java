@@ -15,7 +15,7 @@ import card.base.Card;
 public class Hand extends card.base.Hand {
     private static final long serialVersionUID = 0L;
     private boolean facedown = true; //The first card is always facedown in a new hand, except splits.
-    private int wager;
+    public int wager; // At least in this iteration of the code there's no special logic to this -- may as well allow it to be accessed directly.
 
     public void reveal(){
         facedown = false;
@@ -33,7 +33,7 @@ public class Hand extends card.base.Hand {
                 aces++;
                 score+=11;
             } else {
-                score+=Math.max(val, 10);
+                score+=Math.min(val, 10);
             }
         }
         while(score>21 && aces>0){
@@ -59,10 +59,8 @@ public class Hand extends card.base.Hand {
         return temp.score();
     }
 
-    public int getWager(){
-        return wager;
-    }
-
-    
+    // public int getWager(){
+    //     return wager;
+    // }
 
 }
