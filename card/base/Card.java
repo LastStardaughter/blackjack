@@ -1,23 +1,21 @@
-//Cards are internally represented as strings
-//String of "JOKER" is a joker.
-//The first 1 or 2 characters is the value (A, 2-10, J, Q, K)
-//The last character is the suit (C, D, H, S)
+/*
+Cards are internally represented as strings
+String of "JOKER" is a joker.
+The first 1 or 2 characters is the value (A, 2-10, J, Q, K)
+The last character is the suit (C, D, H, S)
 
-//Representing cards as an instantiated class, it feels off somehow, even if they are physical objects.
-//Something inside me wants to make this a static class that operates on the Strings the cards are actually represented as...
+Since I already had Deck operating with strings, I have to do logic on strings anyway, even if I had Card store them as something else.
+I'm gonna follow my gut and make this a non-instantiated class that operates on the Strings the cards are actually represented as...
+I feel that for a real application, any code dealing with stuff that game doesn't use, like jokers, should be stripped out.
+*/
 package card.base;
 
 public class Card {
     protected static final String JOKER="JOKER";
-    private String card;
-    
-    public Card(String card){
-        this.card=card;
-    }
 
     //This identifies a card's value by a number. It is not assumed to equal game point value.
     //Depending on the specific game, you could override this method or have processing elsewhere take this int then work out the point value.
-    public int value(){
+    public static int value(String card){
         if (card.equals(JOKER)){
             return -1;
         }
@@ -31,18 +29,18 @@ public class Card {
         }
     }
 
-    public String suit(){
+    public static String suit(String card){
         if(card.equals(JOKER)){return "";}
         if(card.charAt(0)=='1'){return suitFromChar(card.charAt(2));}
         return suitFromChar(card.charAt(1));
     }
 
-    public String name(){
+    public static String name(String card){
         if(card.equals(JOKER)){return "Joker";}
-        return stringValue() + " of " + suit();
+        return stringValue(card) + " of " + suit(card);
     }
 
-    public String stringValue(){
+    public static String stringValue(String card){
         if (card.equals(JOKER)){return "Joker";}
         switch(card.charAt(0)){
             case 'A':return "Ace";
@@ -62,21 +60,5 @@ public class Card {
             case 'S':return "Spades";
             default:return "Unknown";
         }
-    }
-
-    @Override
-    public boolean equals(Object o){
-        if (!(o instanceof Card)) { 
-            return false; 
-        } 
-        Card that = (Card) o;
-        return this.card.equals(that.card);
-    }
-
-    @Override
-    public int hashCode(){
-        char s, v=card.charAt(0);
-        if(v=='1'){s=card.charAt(2);} else {s = card.charAt(1);}
-        return (((int) s << 16) | ((int) v));
     }
 }

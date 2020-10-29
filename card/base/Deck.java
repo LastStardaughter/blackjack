@@ -1,7 +1,13 @@
-//Cards are internally represented as strings
-//String of "JOKER" is a joker.
-//The first 1 or 2 characters is the value (A, 2-10, J, Q, K)
-//The last character is the suit (C, D, H, S)
+/*
+Cards are internally represented as strings
+The first 1 or 2 characters is the value (A, 2-10, J, Q, K)
+The last character is the suit (C, D, H, S)
+Why? Mostly because I already wrote an implementation like this, but it does have some benefits:
+It's easily extensible to games not using the standard 52-card deck, or to games that combine multiple decks.
+I originally wrote it to include jokers with two copies of string "JOKER".
+As far as Deck is concerned, those strings could be anything.
+Shuffled multiple decks together? Just add more strings! Want to play Mille Bornes? Use a different set of strings!
+*/
 
 package card.base;
 
@@ -24,11 +30,7 @@ public class Deck{
     }
 
     //Note: If we're out of cards, deck will throw an IndexOutOfBoundsException.
-    public Card draw(){
-            return new Card(deck.get(pos++));
-    }
-
-    protected String drawStr(){
+    public String draw(){
         return deck.get(pos++);
     }
 
