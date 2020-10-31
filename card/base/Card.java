@@ -61,4 +61,26 @@ public class Card {
             default:return "Unknown";
         }
     }
+
+    public static String display(String card){
+        if(card.equals(JOKER)){return "JK";}
+        char val = card.charAt(0), suit=card.charAt(1);
+        if(val=='1'){
+            val = '➓';
+            suit = card.charAt(2);
+            }
+        switch(suit){
+            case 'C':suit='♧';
+                break;
+            case 'D':suit='♦';
+                break;
+            case 'H':suit='♥';
+                break;
+            case 'S':suit='♤';
+                break;
+            default:suit='?';
+        }
+        char temp[]={val, suit};
+        return new String(temp);
+    }
 }

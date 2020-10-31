@@ -4,6 +4,15 @@ import card.base.Deck;
 import java.util.Scanner;
 
 public class Blackjack {
+
+    //Notes: Default max rounds for 1,2,3,4,5 players is 8,8,16,25,30
+    //Max players is 7
+    //default starting tokens is 200. Easy number to work with.
+    //default minimum bet is 1/100 starting tokens
+    //default maximum bet is starting tokens/2
+    //After rounds 8,16,25,30, lowest player is eliminated if there's still more than one
+    //After round 8, minimum bet x2.5
+    //After round 16, minimum bet x2 (total x5)
  
     public static void main(String[] args) {
         int numPlayers = 1, games=0;

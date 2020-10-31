@@ -16,11 +16,21 @@ import java.util.Arrays;
 import java.util.Collections;
 
 public class Deck{
+    //Cards are listed in the order they happened to be stored in my last implementation (a JSON array) after shuffling
+    private static final String[] FIFTY_TWO = {"4C","7D","AD","5C","9H","QC","JC","JH","7S","7C","10S","QD","JD","QS","2C","5D","8D","3D","6H","5H","9C","8S","4H","8C","9S","7H","4S","2D","9D","3S","6S","KS","3C","10H","JS","8H","2H","KD","KC","10C","6D","6C","10D","KH","AS","AC","4D","5S","2S","3H","QH","AH"};
     private ArrayList<String> deck;
     private int pos;
 
     public Deck(){
-        deck = new ArrayList<String>(Arrays.asList(new String[]{"4C","7D","AD","5C","9H","QC","JC","JH","7S","7C","10S","QD","JD","QS","2C","5D","8D","3D","6H","5H","9C","8S","4H","8C","9S","7H","4S","2D","9D","3S","6S","KS","3C","10H","JS","8H","2H","KD","KC","10C","6D","6C","10D","KH","AS","AC","4D","5S","2S","3H","QH","AH"}));
+        deck = new ArrayList<String>(Arrays.asList(FIFTY_TWO));
+        shuffle();
+    }
+
+    public Deck(int decks){
+        deck = new ArrayList<String>(Arrays.asList(FIFTY_TWO));
+        for (int i=1;i<decks;i++){
+            deck.addAll(Arrays.asList(FIFTY_TWO));
+        }
         shuffle();
     }
 
