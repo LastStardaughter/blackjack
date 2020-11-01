@@ -6,7 +6,7 @@ public class Dealer {
     public static char turn(Hand hand){
         if(hand.score() < 17){return 'h';}
         for(String card : hand){
-            if(card.charAt(0) == 'A'){return 'h';}
+            if(card.charAt(0) == 'A'){return 's';} //Whether to hit or stay on soft 17
         }
         return 's';
     }

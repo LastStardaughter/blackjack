@@ -5,7 +5,7 @@ import card.blackjack.Hand;
 import card.base.Card;
 import java.util.Arrays;
 
-public class HardAI implements AI {
+public class HardAIDealerHits17 implements AI {
     int startingBalance, balance, min, max, decks, dealer, lead;
     boolean ace, pair;
 
@@ -49,11 +49,20 @@ public class HardAI implements AI {
         int score = hand.score();
 
         //Surrender
-        if(score==16 && !pair && !ace){
+        if(dealer==11){
+            switch(score){
+                case 16:if(ace){break;}
+                case 15:
+                case 17:
+                return 'u';
+                default:
+            }
+        }
+        if(score==16 && !ace){
+            if(pair){return 'p';}; //but split 8s against anything but an ace
             switch(dealer){
                 case 9:
                 case 10:
-                case 11:
                 return 'u';
                 default:
             }
@@ -62,7 +71,7 @@ public class HardAI implements AI {
 
         //Split
         if(pair){
-            if(ace || score==16){return 'p';}
+            if(ace){return 'p';}
             switch(score){
                 case 4:
                 case 6:if(dealer >=4 && dealer <= 7){return 'p';}
@@ -81,7 +90,7 @@ public class HardAI implements AI {
             if(score==9 && dealer <=6 && dealer != 2){return 'd';}
             if(score==10 && dealer < 10){return 'd';}
         }
-        if(score==11 && !ace && dealer != 11){return 'd';}
+        if(score==11){return 'd';}
         if(ace){
             switch(score){
                 case 13:
@@ -90,8 +99,10 @@ public class HardAI implements AI {
                 case 15:
                 case 16:if(dealer <= 6 && dealer >= 4){return 'd';}
                     break;
-                case 17:
-                case 18:if(dealer<=6 && dealer != 2){return 'd';}
+                case 18:if(dealer == 2){return 'd';}
+                case 17:if(dealer<=6 && dealer != 2){return 'd';}
+                    break;
+                case 19:if(dealer==6){return 'd';}
                     break;
                 default:
             }

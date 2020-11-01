@@ -1,9 +1,10 @@
 package ai;
 import java.util.Scanner;
 import java.util.Arrays;
+import card.blackjack.Hand;
 
 public class ConsolePlayer implements AI {
-    int balance, min, max;
+    int balance, min, max, wager;
     
     public void init(int balance, int min, int max, int decks){
         this.min = min;
@@ -32,7 +33,7 @@ public class ConsolePlayer implements AI {
         this.balance=balance;
         Arrays.sort(remainingScores);
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Opponent balances: ");
+        System.out.print("Round " + curRound + "/" + finalRound + ". Opponent balances: ");
         printArray(remainingScores);
         if(wagers.length == 0){
             System.out.print("\nYou are first to wager.");
@@ -41,7 +42,7 @@ public class ConsolePlayer implements AI {
             printArray(wagers);
         }
         System.out.print(" Enter wager (" + min + "-" + Math.min(max, balance) + "/" + balance + "): ");
-        int wager=Integer.parseInt(scanner.nextLine());
+        wager=Integer.parseInt(scanner.nextLine());
         scanner.close();
         wager = Math.max(wager, min);
         wager = Math.min(wager, max);
@@ -50,6 +51,8 @@ public class ConsolePlayer implements AI {
 
     public char turn1(Hand hand, String info){
         Scanner scanner = new Scanner(System.in);
+        System.out.println(info);
+        
 
     }
 

@@ -4,8 +4,8 @@ package ai;
 If others are betting small, bet big; if others are betting big, go small
 If we're nearing the last round, bet what we need to to beat the leader in time.
 Similar logic with elimination rounds if we have the lowest balance.
-When making such a catchup bet, go all in if remaining money isn't more than MAX(PLANNED_BET/7, SMALL_BET)
-Sanity check: Treat MAX_BET as smaller of MAX_BET and LARGE_BET?
+(In this implementation, the above two only consider the current round and don't yet try to play ahead)
+Todo: Add logic that checks if you're in first place at the end and reasons about that.
 
 The computer makes one of four bets:
 TAKE_LEAD: Bet what you 'need to' to take the highest place you can before the game ends.
@@ -34,24 +34,27 @@ public class BettingStrategy {
 
     public static int bet(int init, int min, int max, int balance, int[] allOpponents, int[] remainingOpponents, int[] wagers, int current, int rounds){
         int medium=init/rounds, small=medium/4, large=medium*4;
+        if(allOpponents.length==0){return medium;} //If there are no opponents there is no strategy
         String strategy; //Can be output for debugging
         Arrays.sort(allOpponents);
         Arrays.sort(remainingOpponents);
         Arrays.sort(wagers);
-        int bet, lead=allOpponents[allOpponents.length-1], last=remainingOpponents[0], catchLead=(lead*2)-balance, catchLast=(Math.max(last*2,min*3)-balance);
+        int last = remainingOpponents.length == 0 ? 0 : remainingOpponents[0];
+        int lastTarget = Math.max(last+Math.min(last,max),min*3);
+        int bet, lead=allOpponents[allOpponents.length-1], catchLead=(lead+Math.min(lead,max))-balance, catchLast=lastTarget-balance;
         int median = wagers.length == 0 ? medium : median(wagers);
         if(current==rounds && balance<lead){
             strategy="TAKE_LEAD";
             bet=catchLead;
-        } else if((current==8 || current==16 || current==25 || current==30) && balance<catchLast){
+        } else if((current==8 || current==16 || current==25 || current==30) && balance<lastTarget){
             strategy="CATCH_LAST";
             bet=catchLast+1;
-        } else if(median>=medium){
-            strategy="SMALL";
-            bet=small;
-        } else {
+        } else if(median<medium){
             strategy="LARGE";
             bet=large;
+        } else {
+            strategy="SMALL";
+            bet=small;
         }
         int remainder=balance-bet;
         if(remainder<=Math.max(bet/7, small-1) || remainder<min){

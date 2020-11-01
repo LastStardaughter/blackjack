@@ -3,9 +3,10 @@
 package ai;
 import card.blackjack.Hand;
 import java.util.Random;
+import java.util.Arrays;
 
 public class EasyAI implements AI {
-    int startingBalance, balance, min, max;
+    int startingBalance, balance, min, max, lead;
 
     public void init(int balance, int min, int max, int decks){
         this.balance=startingBalance=balance;
@@ -16,7 +17,7 @@ public class EasyAI implements AI {
     public void message(String msg){}
 
     public boolean keepPlaying(int balance){
-        return true;
+        return balance <= lead+Math.min(lead, max);
     }
 
     public void updateLimits(int min, int max){
@@ -26,6 +27,8 @@ public class EasyAI implements AI {
 
     public int wager(int balance, int[] scores, int[] remainingScores, int[] wagers, int curRound, int finalRound){
         this.balance=balance;
+        Arrays.sort(scores);
+        lead = scores[scores.length-1];
         if(new Random().nextBoolean()){
             int bet=(startingBalance/finalRound) * 4, remainder=balance-bet;
             if(remainder<=(bet/7) || remainder<min){
