@@ -62,6 +62,7 @@ public class BettingStrategy {
         }
         if(bet<min){bet=min;}
         if(bet>max){bet=max;}
+        //System.out.println(strategy + " " + bet);
         return bet;
     }
 

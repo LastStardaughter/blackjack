@@ -30,10 +30,13 @@ public class Blackjack {
         ArrayList<Score> scoreTable;
         Scanner scanner = new Scanner(System.in);
 
+        //Welcome
         System.out.println("Welcome to Scott's blackjack table!");
         System.out.println("(Input validation is not complete in this demo.)");
         System.out.println("Default options are listed in (parentheses), press enter to select default.");
-        numPlayers=Integer.parseInt(getInput(scanner, "Enter number of players, reccomended <8: "));
+
+        //Game settings
+        numPlayers=Integer.parseInt(getInput(scanner, "Enter number of players, recommended <8: "));
         def = defaultRounds(numPlayers);
         maxRounds=getInt(scanner, "Enter number of rounds ("+def+"): ", def);
         decks=getInt(scanner, "Enter number of decks (6): ",6);
@@ -41,10 +44,12 @@ public class Blackjack {
         startingChips=getInt(scanner, "Enter starting chips (2000): ",2000)        ;
         min=getInt(scanner, "Enter minimum bet ("+startingChips/100+"): ",startingChips/100);
         max=getInt(scanner, "Enter maximum bet ("+startingChips/2+"): ",startingChips/2);
+
+        //Enter players
         players=new ArrayList<Player>(numPlayers);
         System.out.println("Enter player names. Enter 1 for easy COM player, 2 for hard COM player.");
         for(int i=0;i<numPlayers;i++){
-            String name=getInput(scanner, "Enter name for player "+(i+1)+":");
+            String name=getInput(scanner, "Enter name for player "+(i+1)+": ");
             AI controller;
             switch(name){
                 case "1":   controller=new EasyAI();
@@ -67,6 +72,7 @@ public class Blackjack {
             if(round==8){min=Math.round(min*2.5f);}
             if(round==16){min*=2;}
             hands=new ArrayList<Hand>(players.size()*2);
+            System.out.println("** ROUND "+round+"/"+maxRounds+" **");
 
             //Get wager from each player while building hands array.
             for(Player p : players){
@@ -76,6 +82,7 @@ public class Blackjack {
                 hand.setWager(p.wager(scoreTable, round, maxRounds));
                 p.decBalance(hand.getWager());
                 hands.add(hand);
+                System.out.println(p.getName()+" wagers "+hand.getWager());
             }
             
             //draw dealer hand.
@@ -108,32 +115,34 @@ public class Blackjack {
                     System.out.println(p.getName()+" was dealt a blackjack!");
                     continue;
                 }
-                switch(p.turn1(h, info.toString())){
-                    case 'u':   p.incBalance(h.getWager()-h.getWager()/2);
-                                h.setWager(h.getWager()/2);
-                                System.out.println(p.getName() + " surrenders at " + h.score()+".");
-                                done=true;
-                                break;
-                    case 'd':   p.decBalance(h.getWager());
-                                h.doubleWager();
-                                h.add(deck.draw());
-                                System.out.println(p.getName()+" doubles their bet and draws "+Card.display(h.get(2)));                                
-                                done=true;
-                                break;
-                    case 'p':   p.decBalance(h.getWager());
-                                hands.add(i+1, new Hand(p));
-                                hands.get(i+1).add(h.remove(1));
-                                hands.get(i+1).setWager(h.getWager());
-                                System.out.println(p.getName()+" splits their hand.");
-                                break;
-                    case 's':   done=true;
-                                System.out.println(p.getName()+" stays at "+h.score()+".");
-                                break;
-                    case 'h':   System.out.println(p.getName()+" hits.");
-                                break;
-                    default:    System.out.println("Error: invalid input. "+p.getName()+" stays.");
-                                done=true;
-                                break;
+                if(h.size()==2){ //Stops us from treating split decks as an extra first turn.
+                    switch(p.turn1(h, info.toString())){
+                        case 'u':   p.incBalance(h.getWager()-h.getWager()/2);
+                                    h.setWager(h.getWager()/2);
+                                    System.out.println(p.getName() + " surrenders at " + h.score()+".");
+                                    done=true;
+                                    break;
+                        case 'd':   p.decBalance(h.getWager());
+                                    h.doubleWager();
+                                    h.add(deck.draw());
+                                    System.out.println(p.getName()+" doubles their bet and draws "+Card.display(h.get(2)));                                
+                                    done=true;
+                                    break;
+                        case 'p':   p.decBalance(h.getWager());
+                                    hands.add(i+1, new Hand(p));
+                                    hands.get(i+1).add(h.remove(1));
+                                    hands.get(i+1).setWager(h.getWager());
+                                    System.out.println(p.getName()+" splits their hand.");
+                                    break;
+                        case 's':   done=true;
+                                    System.out.println(p.getName()+" stays at "+h.score()+".");
+                                    break;
+                        case 'h':   System.out.println(p.getName()+" hits.");
+                                    break;
+                        default:    System.out.println("Error: invalid input. "+p.getName()+" stays.");
+                                    done=true;
+                                    break;
+                    }
                 }
                 while(!done){
                     h.add(deck.draw());
@@ -185,6 +194,13 @@ public class Blackjack {
                 info.append(" [" + h.getPlayer().getName() + " " + h.display() + "]");
             }
             System.out.println("Final hands for round "+round+":\n"+info.toString());
+            ArrayList<Player> copyPlayers=(ArrayList<Player>) players.clone();
+            copyPlayers.sort(Collections.reverseOrder());
+            info=new StringBuilder("Scores: ");
+            for (Player p : copyPlayers){
+                info.append("[" + p.getName() + " " + p.getBalance() + "]");
+            }
+            System.out.println(info.toString());
 
             //end-of-round processing
             if(round==8){min=Math.round(min*2.5f);}
@@ -268,17 +284,17 @@ public class Blackjack {
             }
         }
         
-        if(round == 8 || round == 16 || round == 25 || round == 30 && (!tie && remove.size()<players.size()-1)){remove.add(lastPlace);}
+        if((round == 8 || round == 16 || round == 25 || round == 30) && (!tie && remove.size()<players.size()-1)){remove.add(lastPlace);}
 
+        //System.out.println("Players to remove: " + remove);
         if (remove.size()>0){
             int i=0;
             while (i<players.size()){
-                if(remove.contains(i+removed)){
+                if(remove.contains(i+removed)){//System.out.print("Removing index "+i+": ");
                     System.out.println(players.get(i).getName()+" has been eliminated with score "+players.get(i).getBalance());
                     players.remove(i);
                     removed++;
-                }
-                i++;
+                } else {i++;}
             }
         }        
         return;

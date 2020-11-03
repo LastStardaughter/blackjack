@@ -34,23 +34,11 @@ public class ConsolePlayer implements AI {
         this.max = max;
     }
 
-    //public int wager(int balance, int[] scores, int[] remainingScores, int[] wagers, int curRound, int finalRound){
     public int wager(int balance, ArrayList<Score> scoreTable, int curRound, int finalRound){
-        //int[] scores=null, remainingScores=null, wagers=null;
-        int[][] arrays = {null, null, null};
+        //Console players can read the status messages for now.
+        //Might be some merit in re-displaying scoreTable's information for them in the future though.
         this.balance=balance;
-        Score.generateArrays(scoreTable, arrays);
-        int[] scores=arrays[0], remainingScores=arrays[1], wagers=arrays[2];
-        Arrays.sort(remainingScores);
-        System.out.print("Round " + curRound + "/" + finalRound + ". Opponent balances: ");
-        printArray(remainingScores);
-        if(wagers.length == 0){
-            System.out.print("\nYou are first to wager.");
-        } else {
-            System.out.print("\nWagers: ");
-            printArray(wagers);
-        }
-        System.out.print(" Enter wager (" + min + "-" + Math.min(max, balance) + "/" + balance + "): ");
+        System.out.print("Enter wager (" + min + "-" + Math.min(max, balance) + "/" + balance + "): ");
         wager=Integer.parseInt(scanner.nextLine());
         wager = Math.max(wager, min);
         wager = Math.min(wager, max);
@@ -77,12 +65,9 @@ public class ConsolePlayer implements AI {
                 case 's':
                 case 'h':
                 case 'u':   return response;
-                case 'p':   if(!pair){System.out.println("You cannot split this hand.");}else if(pair && canDouble){
-                    return response;
-                }
-                case 'd':   if(!canDouble){System.out.println("You don't have enough chips.");}else if (canDouble){
-                    return response;
-                }
+                case 'p':   if(!pair){System.out.println("You cannot split this hand.");}else if(pair && canDouble){return response;}
+                break;
+                case 'd':   if(!canDouble){System.out.println("You don't have enough chips.");}else if (canDouble){return response;}
                 default:
             }
         }

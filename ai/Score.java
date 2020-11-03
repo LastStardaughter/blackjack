@@ -24,6 +24,11 @@ public class Score implements Comparable<Score>{
         return this.score-that.score;
     }
 
+    /*
+    This is what happens when planning ahead goes poorly and you have to write code to awfully kludge
+    data in a good useful format into the awful shape you thought would be a good idea to expect it in.
+    */
+    //Old function definition for reference of what's in arrays[]
     //public static void generateArrays(ArrayList<Score> scoreTable, int[] scores, int[] remainingScores, int[] wagers){
     public static void generateArrays(ArrayList<Score> scoreTable, int[][] arrays){
         arrays[0] = new int[scoreTable.size()];
