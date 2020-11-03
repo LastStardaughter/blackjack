@@ -66,7 +66,7 @@ public class Card {
         if(card.equals(JOKER)){return "JK";}
         char val = card.charAt(0), suit=card.charAt(1);
         if(val=='1'){
-            val = '➓';
+            val = '⒑';//Many possible unicodes for 10 ⑩⑽⒑⓾❿➉➓㉈
             suit = card.charAt(2);
             }
         switch(suit){
@@ -80,7 +80,7 @@ public class Card {
                 break;
             default:suit='?';
         }
-        char temp[]={val, suit};
+        char temp[]={suit, val};
         return new String(temp);
     }
 }

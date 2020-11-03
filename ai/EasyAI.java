@@ -4,6 +4,7 @@ package ai;
 import card.blackjack.Hand;
 import java.util.Random;
 import java.util.Arrays;
+import java.util.ArrayList;
 
 public class EasyAI implements AI {
     int startingBalance, balance, min, max, lead;
@@ -25,8 +26,12 @@ public class EasyAI implements AI {
         this.max=max;
     }
 
-    public int wager(int balance, int[] scores, int[] remainingScores, int[] wagers, int curRound, int finalRound){
+    public int wager(int balance, ArrayList<Score> scoreTable, int curRound, int finalRound){
+        //int[] scores=null, remainingScores=null, wagers=null;
+        int[][] arrays = {null, null, null};
         this.balance=balance;
+        Score.generateArrays(scoreTable, arrays);
+        int[] scores=arrays[0], remainingScores=arrays[1], wagers=arrays[2];
         Arrays.sort(scores);
         lead = scores[scores.length-1];
         if(new Random().nextBoolean()){
@@ -36,9 +41,12 @@ public class EasyAI implements AI {
             }
             if(bet<min){bet=min;}
             if(bet>max){bet=max;}
+            balance-=bet;
             return bet;
         }
-        return BettingStrategy.bet(startingBalance, min, max, balance, scores, remainingScores, wagers, curRound, finalRound);
+        int bet=BettingStrategy.bet(startingBalance, min, max, balance, scores, remainingScores, wagers, curRound, finalRound);
+        this.balance-=bet;
+        return bet;
     }
 
     public char turn1(Hand hand, String info){

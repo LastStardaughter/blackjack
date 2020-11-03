@@ -3,6 +3,7 @@ public class Hand extends card.blackjack.Hand {
     private Player player;
 
     public Hand(Player player){
+        super();
         this.player=player;
     }
 

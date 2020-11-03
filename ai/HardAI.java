@@ -4,6 +4,7 @@ package ai;
 import card.blackjack.Hand;
 import card.base.Card;
 import java.util.Arrays;
+import java.util.ArrayList;
 
 public class HardAI implements AI {
     int startingBalance, balance, min, max, decks, dealer, lead;
@@ -27,15 +28,22 @@ public class HardAI implements AI {
         this.max=max;
     }
 
-    public int wager(int balance, int[] scores, int[] remainingScores, int[] wagers, int curRound, int finalRound){
+    public int wager(int balance, ArrayList<Score> scoreTable, int curRound, int finalRound){
+        //int[] scores=null, remainingScores=null, wagers=null;
+        int[][] arrays = {null, null, null};
         this.balance=balance;
+        Score.generateArrays(scoreTable, arrays);
+        int[] scores=arrays[0], remainingScores=arrays[1], wagers=arrays[2];
         Arrays.sort(scores);
-        lead = scores[scores.length-1];
-        return BettingStrategy.bet(startingBalance, min, max, balance, scores, remainingScores, wagers, curRound, finalRound);
+        if(scores.length>0){lead = scores[scores.length-1];}
+        int bet=BettingStrategy.bet(startingBalance, min, max, balance, scores, remainingScores, wagers, curRound, finalRound);
+        this.balance-=bet;
+        return bet;
     }
 
     public char turn1(Hand hand, String info){
-        dealer = 0; //Placeholder, fill in with real code after you've set up the info string
+        dealer=valFromChar(info.charAt(7)); //6 if value first, 7 if suit first
+        boolean canDouble=balance>=hand.getWager();
         boolean[] values={false, false, false, false, false, false, false, false, false, false, false, false, false, false};
         ace = pair = false;
         for(String card : hand){
@@ -62,36 +70,36 @@ public class HardAI implements AI {
 
         //Split
         if(pair){
-            if(ace || score==16){return 'p';}
+            if(ace || score==16){return canDouble? 'p' : 'h';}
             switch(score){
                 case 4:
-                case 6:if(dealer >=4 && dealer <= 7){return 'p';}
+                case 6:if(dealer >=4 && dealer <= 7){return canDouble? 'p' : 'h';}
                     break;
-                case 12:if(dealer >=3 && dealer <= 6){return 'p';}
+                case 12:if(dealer >=3 && dealer <= 6){return canDouble? 'p' : 'h';}
                     break;
-                case 14:if(dealer <= 7){return 'p';}
+                case 14:if(dealer <= 7){return canDouble? 'p' : 'h';}
                     break;
-                case 18:if(dealer < 10 && dealer != 7){return 'p';}
+                case 18:if(dealer < 10 && dealer != 7){return canDouble? 'p' : 'h';}
                 default:
             }
         }
 
         //Double
         if(!ace){
-            if(score==9 && dealer <=6 && dealer != 2){return 'd';}
-            if(score==10 && dealer < 10){return 'd';}
+            if(score==9 && dealer <=6 && dealer != 2){return canDouble? 'd' : 'h';}
+            if(score==10 && dealer < 10){return canDouble? 'd' : 'h';}
         }
-        if(score==11 && !ace && dealer != 11){return 'd';}
+        if(score==11 && !ace && dealer != 11){return canDouble? 'd' : 'h';}
         if(ace){
             switch(score){
                 case 13:
-                case 14:if(dealer == 5 || dealer == 6){return 'd';}
+                case 14:if(dealer == 5 || dealer == 6){return canDouble? 'd' : 'h';}
                     break;
                 case 15:
-                case 16:if(dealer <= 6 && dealer >= 4){return 'd';}
+                case 16:if(dealer <= 6 && dealer >= 4){return canDouble? 'd' : 'h';}
                     break;
                 case 17:
-                case 18:if(dealer<=6 && dealer != 2){return 'd';}
+                case 18:if(dealer<=6 && dealer != 2){return canDouble? 'd' : 's';}
                     break;
                 default:
             }
@@ -128,6 +136,21 @@ public class HardAI implements AI {
             return 's';
         }
         return 's';
+    }
+
+    private static int valFromChar(char c){
+        switch(c){
+            case 'A':return 11;
+            case '9':return 9;
+            case '8':return 8;
+            case '7':return 7;
+            case '6':return 6;
+            case '5':return 5;
+            case '4':return 4;
+            case '3':return 3;
+            case '2':return 2;
+            default:return 10;
+        }
     }
 
 }

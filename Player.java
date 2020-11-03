@@ -1,6 +1,8 @@
 import ai.AI;
+import ai.Score;
+import java.util.ArrayList;
 
-public class Player {
+public class Player implements Comparable<Player> {
     private int balance;
     private String name;
     private AI controller;
@@ -20,8 +22,13 @@ public class Player {
     public void message(String msg){controller.message(msg);}
     public boolean keepPlaying(){return controller.keepPlaying(balance);}
     public void updateLimits(int min, int max){controller.updateLimits(min, max);}
-    public int wager(int[] scores, int[] remainingScores, int[] wagers, int curRound, int finalRound){return controller.wager(balance, scores, remainingScores, wagers, curRound, finalRound);}
+    public int wager(ArrayList<Score> scoreTable, int curRound, int finalRound){return controller.wager(balance, scoreTable, curRound, finalRound);}
     public char turn1(Hand hand, String info){return controller.turn1(hand, info);}
     public char turn(Hand hand){return controller.turn(hand);}
+
+    public int compareTo(Player o){
+        if(o==null){throw new NullPointerException("Cannot compare Player to null.");}
+        return balance-o.balance;
+    }
     
 }

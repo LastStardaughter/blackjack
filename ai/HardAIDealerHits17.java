@@ -4,6 +4,7 @@ package ai;
 import card.blackjack.Hand;
 import card.base.Card;
 import java.util.Arrays;
+import java.util.ArrayList;
 
 public class HardAIDealerHits17 implements AI {
     int startingBalance, balance, min, max, decks, dealer, lead;
@@ -27,8 +28,12 @@ public class HardAIDealerHits17 implements AI {
         this.max=max;
     }
 
-    public int wager(int balance, int[] scores, int[] remainingScores, int[] wagers, int curRound, int finalRound){
+    public int wager(int balance, ArrayList<Score> scoreTable, int curRound, int finalRound){
+        //int[] scores=null, remainingScores=null, wagers=null;
+        int[][] arrays = {null, null, null};
         this.balance=balance;
+        Score.generateArrays(scoreTable, arrays);
+        int[] scores=arrays[0], remainingScores=arrays[1], wagers=arrays[2];
         Arrays.sort(scores);
         lead = scores[scores.length-1];
         return BettingStrategy.bet(startingBalance, min, max, balance, scores, remainingScores, wagers, curRound, finalRound);

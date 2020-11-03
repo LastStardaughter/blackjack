@@ -19,7 +19,7 @@ public class Hand extends ArrayList<String>{
         int pos=0;
         while(pos<this.size()){
             disp.append(Card.display(get(pos++)));
-            disp.append(" ");
+            if(pos<this.size()){disp.append(" ");}
         }
         return disp.toString();
     }

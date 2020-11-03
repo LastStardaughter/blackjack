@@ -25,6 +25,10 @@ public class Hand extends card.base.Hand {
     private boolean facedown = true; //The first card is always facedown in a new hand, except splits.
     protected int wager;
 
+    public Hand(){
+        super();
+    }
+
     public void reveal(){
         facedown = false;
     }
@@ -76,7 +80,7 @@ public class Hand extends card.base.Hand {
         }
         while(pos<this.size()){
             disp.append(Card.display(get(pos++)));
-            disp.append(" ");
+            if(pos<this.size()){disp.append(" ");}
         }
         return disp.toString();
     }
