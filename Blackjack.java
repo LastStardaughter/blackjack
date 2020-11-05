@@ -47,7 +47,7 @@ public class Blackjack {
 
         //Enter players
         players=new ArrayList<Player>(numPlayers);
-        System.out.println("Enter player names. Enter 1 for easy COM player, 2 for hard COM player.");
+        System.out.println("Enter player names. Enter 1, 2, or 3 for easy, medium, or hard COM player.");
         for(int i=0;i<numPlayers;i++){
             String name=getInput(scanner, "Enter name for player "+(i+1)+": ");
             AI controller;
@@ -55,9 +55,12 @@ public class Blackjack {
                 case "1":   controller=new EasyAI();
                             name = "COM" + ++comPlayers;
                             break;
-                case "2":   controller=new HardAI();
+                case "2":   controller=new MediumAI();
                             name = "COM" + ++comPlayers;
                             break;
+                case "3":   controller=new HardAI();
+                            name = "COM" + ++comPlayers;
+                            break;                            
                 case "":    name="Player " + (i+1);
                 default:    controller=new ConsolePlayer(scanner);
             }
@@ -189,9 +192,9 @@ public class Blackjack {
 
             //Display the final state of the table before the next round.
             dealerHand.reveal();
-            StringBuilder info = new StringBuilder("D: " + dealerHand.display());
+            StringBuilder info = new StringBuilder("D "+dealerHand.score()+":" + dealerHand.display());
             for(Hand h : hands){
-                info.append(" [" + h.getPlayer().getName() + " " + h.display() + "]");
+                info.append("[" + h.getPlayer().getName() + " " + h.display() + "/" + h.score() + "]");
             }
             System.out.println("Final hands for round "+round+":\n"+info.toString());
             ArrayList<Player> copyPlayers=(ArrayList<Player>) players.clone();
