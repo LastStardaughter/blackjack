@@ -20,3 +20,7 @@ In the event of a tie for last place after an elimination round, no one is elimi
 **Things I'd do differently now:**  
 Write the version of the game logic that interfaces with AI before the AI so I have a clearer picture of what data I have access to and how I can send it to the interface at various points. I'd probably end up with something like a ScoreTable class that's some kind of collection of the Score class.  
 Maybe break each section of game code into a function. This would necessitate some convenient way to pass all required data between functions.  
+
+**Future work:**  
+Break each section of the game code apart as suggested above, using a game struct to pass variables around.  
+Have Deck actually generate the FIFTY_TWO array programatically, with option for jokers.  

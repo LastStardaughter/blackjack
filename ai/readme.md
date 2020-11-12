@@ -7,4 +7,5 @@ An interface that allows the main game code to communicate with human and comput
 **EasyAI** Hits until 17+ then stays. 50% chance to ignore BettingStrategy and just bet high.  
 **HardAI** Chooses actions based on the dealer's card and its hand.   
 **HardAIDealerHits17** Variant of HardAI that makes slightly different decisions, not maintained  
+**MediumAI** Hits until hard 17+ or soft 19+. Splits on 8+ or if dealer doesn't have 8+.  
 **Score** Helper struct that, put in an ArrayList, bundles non-card gamestate data for communication between game code and ai interface  
